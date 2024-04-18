@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>NodeMCU ESP8266 y Node.js Comunicación</title>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  socket.on('mqtt_message', function(msg){
+    document.getElementById('messages').innerHTML += msg + '<br>';
+  });
+  
+</script>
+</head>
+<body>
+<h1>NodeMCU ESP8266 y Node.js Comunicación</h1>
+<div id="messages"></div>
+</body>
+</html>
