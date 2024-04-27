@@ -45,10 +45,30 @@ void reconnect() {
   }
 }
 
+void publishMessage(String topic, String msg) {
+  // Publica el mensaje
+  client.publish(topic, (char*) msg.c_str());
+  Serial.print("Mensaje enviado: ");
+  Serial.println(msg);
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+  
+  for (int i = 0; i < length; i++) {
+    messageTemp += (char)payload[i];
+  }
+  Serial.println(messageTemp);
+}
+
 void setup() {
   Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
 }
 
 void loop() {
@@ -56,18 +76,10 @@ void loop() {
     reconnect();
   }
   client.loop();
-
   // Envia un mensaje cada 5 segundos
   long now = millis();
   static long lastMsg = 0;
   if (now - lastMsg > 5000) {
-    lastMsg = now;
-    // Crea un mensaje
-    String msg = "Hola desde ESP8266 ";
-    msg += String(now);
-    // Publica el mensaje
-    client.publish("nodemcu/test", (char*) msg.c_str());
-    Serial.print("Mensaje enviado: ");
-    Serial.println(msg);
+    publishMessage("nodemcu/test","hola mundo")
   }
 }

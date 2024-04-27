@@ -1,5 +1,6 @@
 const mqtt = require('mqtt');
 const express = require('express');
+
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -18,6 +19,7 @@ client.on('message', (topic, message) => {
 });
 
 app.get('/', (req, res) => {
+  
   res.sendFile(__dirname + '/Client/index.html');
 });
 
@@ -27,7 +29,10 @@ http.listen(3000, () => {
 
 io.on('connection', (socket) => {
   console.log('Un usuario se ha conectado');
+  io.to(socket.id).emit('ping');
 });
+
+
 
 
 
